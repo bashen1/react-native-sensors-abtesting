@@ -1,0 +1,25 @@
+{
+  "name": "react-native-sensors-abtesting",
+  "version": "0.0.1",
+  "description": "react native sensors abtesting",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "react-native",
+    "react",
+    "react-component",
+    "ios",
+    "android"
+  ],
+  "author": "bashen1 <maochunjie@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bashen1/react-native-sensors-abtesting/issues"
+  },
+  "homepage": "https://github.com/bashen1/react-native-sensors-abtesting#readme",
+  "peerDependencies": {
+    "react-native": ">=0.40"
+  }
+}
