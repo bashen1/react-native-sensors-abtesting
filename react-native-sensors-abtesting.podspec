@@ -16,5 +16,5 @@ Pod::Spec.new do |s|
   s.requires_arc  = true
 
   s.dependency "React-Core"
-
+  s.dependency "SensorsABTesting", "1.1.0"
 end

@@ -1,3 +1,4 @@
+#import <SensorsABTest.h>
 #import "RNReactNativeSensorsTesting.h"
 
 @implementation RNReactNativeSensorsTesting {
@@ -27,8 +28,55 @@ RCT_EXPORT_MODULE()
     // Remove upstream listeners, stop unnecessary background tasks
 }
 
-RCT_EXPORT_METHOD(init:(NSDictionary *)param resolve:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(init:(NSDictionary *)params resolve:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+    @try {
+        NSString *requestURL = params[@"serverUrl"];
 
+        if (requestURL && ![requestURL isEqual:@""]) {
+            SensorsABTestConfigOptions *abtestConfigOptions = [[SensorsABTestConfigOptions alloc] initWithURL:requestURL];
+            [SensorsABTest startWithConfigOptions:abtestConfigOptions];
+        }
+    } @catch (NSException *exception) {
+        NSString *errorMessage = [NSString stringWithFormat:@"fail: %@", exception.reason];
+        NSLog(@"%@", errorMessage);
+    }
+    resolve(@"succeed");
+}
+
+RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(fetchCacheABTest:(NSString *)experimentKey defaultValue:(NSString *)defaultValue) {
+    @try {
+        return [[SensorsABTest sharedInstance] fetchCacheABTestWithParamName:experimentKey defaultValue:defaultValue];
+    } @catch (NSException *exception) {
+        return defaultValue;
+    }
+}
+
+RCT_EXPORT_METHOD(asyncFetchABTest:(NSString *)experimentKey defaultValue:(NSString *)defaultValue resolve:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+    @try {
+        [[SensorsABTest sharedInstance] asyncFetchABTestWithParamName:experimentKey
+                                                         defaultValue:defaultValue
+                                                    completionHandler:^(id _Nullable result) {
+            resolve(result);
+        }];
+    } @catch (NSException *exception) {
+        NSString *errorMessage = [NSString stringWithFormat:@"SensorsTesting: %@", exception.reason];
+        NSLog(@"%@", errorMessage);
+        resolve(defaultValue);
+    }
+}
+
+RCT_EXPORT_METHOD(fastFetchABTest:(NSString *)experimentKey defaultValue:(NSString *)defaultValue resolve:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+    @try {
+        [[SensorsABTest sharedInstance] fastFetchABTestWithParamName:experimentKey
+                                                        defaultValue:defaultValue
+                                                   completionHandler:^(id _Nullable result) {
+            resolve(result);
+        }];
+    } @catch (NSException *exception) {
+        NSString *errorMessage = [NSString stringWithFormat:@"SensorsTesting: %@", exception.reason];
+        NSLog(@"%@", errorMessage);
+        resolve(defaultValue);
+    }
 }
 
 @end
